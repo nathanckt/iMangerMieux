@@ -41,6 +41,30 @@
         return $res;
     }
 
+    function create_users($db, $login, $mdp, $nom, $prenom, $mail, $date, $tranche, $sexe, $sport){
+
+        $sql = "INSERT INTO UTILISATEUR (LOGIN, ID_SEXE, ID_TRANCHE, ID_SPORT, MOT_DE_PASSE, NOM, PRENOM, MAIL, DATE_DE_NAISSANCE)
+                    VALUES (:login, :numberSexe, :tranche, :sport, :mdp, :nom, :prenom, :mail, :date)";
+
+        $stmt = $pdo->prepare($sql);
+        
+        $stmt->execute([
+            ':login' => $login,
+            ':numberSexe' => $sexe,
+            ':tranche' => $tranche,
+            ':sport' => $sport,
+            ':mdp' => $mdp,
+            ':nom' => $nom,
+            ':prenom' => $prenom,
+            ':mail' => $mail,
+            ':date' => $date,
+        ]); 
+
+        $user_id = $db->lastInsertId();
+        return ['id' => $user_id, 'name' => $name, 'email' => $mail];
+
+    }
+
 
 
     // ======================
@@ -73,7 +97,31 @@
             exit(json_encode($result));
 
         case 'POST':
-            $result = get_users($pdo);
-            setHeaders();
-            exit(json_encode($result));
+            $data = json_decode(file_get_contents("php://input"));
+            if(isset($data->login) && isset($data->mdp)){
+                $nom = $data->nom;
+                $mail = $data->mail;
+                $login = $data->login;
+                $mdp = $data->mdp;
+                $prenom = $data->prenom;
+                $tranche = $data->tranche;
+                $sexe = $data->sexe;
+                $sport = $data->sport;
+                $date = $data->date;
+
+                $new_users = create_users($pdo, $login, $mdp, $nom, $prenom, $mail, $date, $tranche, $sexe, $sport);
+
+                if($new_users){
+                    setHeaders();
+                    http_response_code(201); 
+                    exit(json_encode($new_users));
+                } else {
+                    http_response_code(500); 
+                    exit(json_encode(['error' => 'Failed to create user']));
+                }
+
+            } else {
+                http_response_code(400); 
+                exit(json_encode(['error' => 'Invalid input']));
+            }
     }
