@@ -1,0 +1,30 @@
+Alias,Name,Episode 1,Episode 2,Episode 3,Episode 4,Episode 5,Episode 6,Episode 7,Sexe,Date Naissance,Mot De Passe,Sport
+BEN,OBI-WAN,1,1,1,1,1,1,0,homme,1965-05-12,HelloThere123!,3
+BEN,KYLO REN,0,0,0,0,0,0,1,homme,1990-11-23,KyloKookieRen!,2
+SEE-THREEPIO,C-3PO,1,1,1,1,1,1,1,droide,1977-07-05,GoldenRobotDance!,1
+THREEPIO,C-3PO,1,1,1,1,1,1,1,droide,1977-07-05,C3POChocoChip!,1
+ARTOO-DETOO,R2-D2,1,1,1,1,1,1,1,droide,1980-03-10,R2D2BeepBoop!,1
+ARTOO,R2-D2,1,1,1,1,1,1,1,droide,1980-03-10,AstroDroidPizza!,1
+PALPATINE,EMPEROR,1,1,1,1,1,1,1,homme,1932-10-03,PalpatinePowerPizza!,2
+DARTH SIDIOUS,EMPEROR,1,1,1,1,1,1,1,homme,1932-10-03,DarkSideDonuts!,3
+BAIL,BAIL ORGANA,1,1,1,1,1,1,1,homme,1958-02-17,OrganaOmelette!,2
+MACE,MACE WINDU,1,1,1,1,1,1,0,homme,1962-06-25,MaceWinduMuffin!,3
+WINDU,MACE WINDU,1,1,1,1,1,1,1,homme,1962-06-25,WinduWaffles2023!,3
+MACE-WINDU,MACE WINDU,1,1,1,1,1,1,1,homme,1962-06-25,MasterMuffinWindu!,3
+NUTE,NUTE GUNRAY,1,1,1,1,1,1,1,femme,1975-09-30,NuteNoodlesGalore!,2
+AUNT BERU,BERU,1,1,1,1,1,1,1,femme,1968-12-11,BeruBerryBites!,1
+DOOKU,COUNT DOOKU,1,1,1,1,1,1,1,homme,1950-01-03,CountDookuDoughnut!,3
+BOBA,BOBA FETT,1,1,1,1,1,1,1,homme,1985-03-09,BobaFettBurrito!,3
+JANGO,JANGO FETT,1,1,1,1,1,1,1,alien,1960-08-19,JangoFettJammyDodger!,3
+PANAKA,CAPTAIN PANAKA,1,1,1,1,1,1,1,homme,1955-05-22,PancakePanaka!,2
+NUTE,NUTE GUNRAY,1,1,1,1,1,1,1,femme,1975-09-30,NuteNachosForever!,2
+KI-ADI,KI-ADI-MUNDI,1,1,1,1,1,1,1,alien,1938-03-03,KiAdisKaleSalad!,3
+BIBBLE,SIO BIBBLE,1,1,1,1,1,1,1,alien,1973-11-13,SioBibbleSourdough!,1
+ON MEDON,TION MEDON,1,1,1,1,1,1,1,alien,1969-03-28,TionTacoTime!,2
+BIB,BIB FORTUNA,1,1,1,1,1,1,1,alien,1976-06-18,BibFortunaFruitcake!,1
+CHEWIE,CHEWBACCA,1,1,1,1,1,1,1,alien,1972-07-21,ChewbaccaCookies!,3
+VADER,DARTH VADER,1,1,1,1,1,1,1,homme,1952-02-05,DarthVaderDoughnuts!,3
+ACKBAR,ADMIRAL ACKBAR,1,1,1,1,1,1,1,alien,1957-10-15,ItsATrapTaco!,2
+FN-2187,FINN,1,1,1,1,1,1,1,homme,1992-11-03,FinnsFriedFroglegs!,3
+UNKAR,UNKAR PLUTT,1,1,1,1,1,1,1,alien,1967-01-29,UnkarPluttPancake!,2
+YOUNG GIRL,REY,0,0,0,0,0,0,1,femme,1993-06-08,ReyOfLightCookies!,1
