@@ -46,7 +46,7 @@
         $sql = "INSERT INTO UTILISATEUR (LOGIN, ID_SEXE, ID_TRANCHE, ID_SPORT, MOT_DE_PASSE, NOM, PRENOM, MAIL, DATE_DE_NAISSANCE)
                     VALUES (:login, :numberSexe, :tranche, :sport, :mdp, :nom, :prenom, :mail, :date)";
 
-        $stmt = $pdo->prepare($sql);
+        $stmt = $db->prepare($sql);
         
         $stmt->execute([
             ':login' => $login,
@@ -61,8 +61,45 @@
         ]); 
 
         $user_id = $db->lastInsertId();
-        return ['id' => $user_id, 'name' => $name, 'email' => $mail];
+        return ['id' => $user_id, 'name' => $nom, 'email' => $mail];
 
+    }
+
+    function update_users($db, $login, $mdp, $nom, $prenom, $mail, $date, $tranche, $sexe, $sport){
+
+        $sql = "UPDATE UTILISATEUR 
+                SET ID_SEXE = :numberSexe, ID_TRANCHE = :tranche, ID_SPORT = :sport, MOT_DE_PASSE = :mdp, NOM = :nom, PRENOM = :prenom, MAIL = :mail, DATE_DE_NAISSANCE = :date
+                WHERE LOGIN = :login";
+
+
+        $stmt = $db->prepare($sql);
+        
+        $stmt->execute([
+            ':login' => $login,
+            ':numberSexe' => $sexe,
+            ':tranche' => $tranche,
+            ':sport' => $sport,
+            ':mdp' => $mdp,
+            ':nom' => $nom,
+            ':prenom' => $prenom,
+            ':mail' => $mail,
+            ':date' => $date,
+        ]); 
+
+        $user_id = $db->lastInsertId();
+        return ['id' => $user_id, 'name' => $nom, 'email' => $mail];
+
+    }
+
+    function delete_user_by_login($db, $login){
+        $sql = "DELETE FROM UTILISATEUR WHERE LOGIN = :login";
+
+        $requete = $db->prepare($sql);
+        $requete->execute([
+            ':login' => $login
+        ]);
+
+        return true;
     }
 
 
@@ -98,6 +135,7 @@
 
         case 'POST':
             $data = json_decode(file_get_contents("php://input"));
+            
             if(isset($data->login) && isset($data->mdp)){
                 $nom = $data->nom;
                 $mail = $data->mail;
@@ -110,6 +148,56 @@
                 $date = $data->date;
 
                 $new_users = create_users($pdo, $login, $mdp, $nom, $prenom, $mail, $date, $tranche, $sexe, $sport);
+
+                if($new_users){
+                    setHeaders();
+                    http_response_code(201); 
+                    exit(json_encode($new_users));
+                } else {
+                    http_response_code(500); 
+                    exit(json_encode(['error' => 'Failed to create user']));
+                }
+
+            } else {
+                http_response_code(400); 
+                exit(json_encode(['error' => 'Invalid input']));
+            }
+
+        case 'DELETE' :
+            if(isset($_GET["login"])){
+                $login = $_GET['login'];
+
+                if(delete_user_by_login($pdo, $login)){
+                    $result = get_users($pdo);
+                    setHeaders();
+                    http_response_code(201);
+                    exit(json_encode($result));
+                }
+                else{
+                    http_response_code(500); 
+                    exit(json_encode(['error' => 'Failed to delete user']));
+                }
+            } else {
+            http_response_code(400); 
+            exit(json_encode(['error' => 'Invalid input']));
+            }
+
+
+        case 'PUT' : 
+            $data = json_decode(file_get_contents("php://input"));
+            
+            if(isset($data->login)){
+                $nom = $data->nom;
+                $mail = $data->mail;
+                $login = $data->login;
+                $mdp = $data->mdp;
+                $prenom = $data->prenom;
+                $tranche = $data->tranche;
+                $sexe = $data->sexe;
+                $sport = $data->sport;
+                $date = $data->date;
+
+                $new_users = update_users($pdo, $login, $mdp, $nom, $prenom, $mail, $date, $tranche, $sexe, $sport);
 
                 if($new_users){
                     setHeaders();
