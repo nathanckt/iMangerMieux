@@ -12,8 +12,15 @@ main{
     top:0%;
 }
 
+.pompiere-regular {
+    font-family: "Pompiere", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+  
+
 body{
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: "Pompiere", sans-serif;
     font-size: 1rem;
     color: white;
     margin: 0;
@@ -25,23 +32,30 @@ body{
 /* HEADER */
 /* ============================== */
 
-header{
+.head{
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 1.5rem;
 }
 
 .head-logo{
-    height: 75px;
+    height: 65px;
 }
 
 .icone-profil{
-    height: 55px;
+    height: 35px;
+    margin-right: 10px;
 }
 
 nav ul{
     display: flex;
     list-style: none;
+    justify-content: space-around;
     padding: 0;
+    width: 50vw;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
 a{
@@ -49,3 +63,17 @@ a{
     text-decoration: none;
 }
 
+.head-profil{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+a:hover{
+    color:orange;
+}
+
+.currentpage{
+    text-decoration: underline;
+}
