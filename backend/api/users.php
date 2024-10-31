@@ -109,7 +109,7 @@
     // ======================
 
     switch($_SERVER['REQUEST_METHOD']){
-        case 'GET':
+       case 'GET':
             if(isset($_GET['populate']) && $_GET['populate'] === '*'){
                 $result = get_users_full($pdo);
                 foreach ($result as &$user) {
@@ -126,7 +126,7 @@
                     
                     unset($user->REPAS_IDS, $user->DATES);
                 }
-            }
+            } 
             else{
                 $result = get_users($pdo);
             }
