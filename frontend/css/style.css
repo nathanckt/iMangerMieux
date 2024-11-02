@@ -71,9 +71,80 @@ a{
 }
 
 a:hover{
-    color:orange;
+    color:#FF914D;
+    background-color:#61A09B ;
 }
 
 .currentpage{
     text-decoration: underline;
+}
+
+/* ============================== */
+/* HERO */
+/* ============================== */
+
+.cta{
+    border-radius: 100px;
+    background-color: #FF914D;
+    padding: 10px 30px;
+    width: 150px;
+    text-align: center;
+    font-size: 2rem;
+}
+
+.hero{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+h1{
+    font-size: 4rem;
+}
+
+h2{
+    font-size: 2.5rem;
+}
+
+p{
+    font-size: 1.5rem;
+}
+
+.hero-btn{
+    margin-top: 60px;
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.hero-title{
+    margin-bottom: 0;
+    color: #f1ead0;
+}
+
+.hero-text{
+    margin-bottom: 0;
+    width: 50vw;
+    text-align: center;
+}
+
+.hero img{
+    position: absolute;
+    height:400px;
+    width:400px;
+}
+
+.fourchette{
+    top: 350px;
+    right: -10px;
+    rotate: 30deg;
+}
+
+.sandwich{
+    top: 75px;
+    left: 0px;
+    rotate: 15deg;
 }

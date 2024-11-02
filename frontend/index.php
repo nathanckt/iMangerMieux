@@ -19,12 +19,14 @@
         </div>
     </header>
     <main>
-        <div class="hero">
-            <h1 class="hero-title">iMangerMieux</h1>
-            <h2 class="hero-subtitle">Découvrez ce que vos repas cachent !</h2>
-            <p class="hero-text">Notre site web innovant a été conçu pour vous aider à savoir ce que vous mangez et l’impact de vos aliments sur votre corps.</p>
-            <p class="hero-text">Vous souhaitez changer d’alimentation vers un mode de vie sain, alors rejoignez l’aventure !</p>
-        </div>
+        <?php
+            $pageToInclude = $currentPageId . ".php";
+            if(is_readable($pageToInclude))
+            require_once($pageToInclude);
+            else
+            require_once("error.php");
+        ?>
     </main>
+    <script src="js/aliments.js"></script>
 </body>
 </html>

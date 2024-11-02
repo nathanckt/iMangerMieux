@@ -16,6 +16,8 @@
                 VALUES (:code, :libelle)";
                 
                 $stmt = $pdo->prepare($sql);
+
+                $ligne[$i] = str_replace(',', '', $ligne[$i]);
                                     
                 $stmt->execute([
                     ':code' => $code,
