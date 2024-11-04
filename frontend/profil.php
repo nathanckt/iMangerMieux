@@ -29,6 +29,7 @@
     </header>
     <main>
     <div class="infos-user">
+        <h1>Bienvenue sur votre profil</h1>
         <div class="infos">
             <div class="info">
             <h3>Nom :</h3>

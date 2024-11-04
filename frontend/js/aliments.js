@@ -122,4 +122,25 @@ $(document).ready(function(){
         alert("La requete s'est terminée en erreur :" + JSON.stringify(error));
     });
 
-})
+    //=====================
+    // GESTION DE L'AJOUT
+    //=====================
+
+
+    $("#ajout-aliment").on("click", "#btn-ajout-nutriment", function(event) {
+        const currentRow = $(this).closest("tr");
+    
+        $(this).remove();
+    
+        const newRow = currentRow.clone();
+    
+        newRow.find("input[type='text']").val("");
+    
+        newRow.find("td:last").append('<button id="btn-ajout-nutriment" type="button" class="cta">+</button>');
+    
+        currentRow.after(newRow);
+    
+        return false;
+    });
+    
+});

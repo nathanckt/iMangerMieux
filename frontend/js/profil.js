@@ -122,9 +122,9 @@ $(document).ready(function(){
         console.log(nom);
         prenom = $('#prenom').val();
         naissance = $('#naissance').val();
-        tranche = libelleTrancheArray.indexOf($('#tranche').val());
-        sexe = libelleSexeArray.indexOf($('#sexe').val());
-        sport = libelleSportArray.indexOf($('#sport').val());
+        tranche = libelleTrancheArray.indexOf($('#tranche').val())+1;
+        sexe = libelleSexeArray.indexOf($('#sexe').val())+1;
+        sport = libelleSportArray.indexOf($('#sport').val())+1;
         mail = $('#mail').val();
 
         let jsonData = JSON.stringify({

@@ -26,7 +26,7 @@ $(document).ready(function() {
                 displayMessage(data.message || 'Connexion réussie', 'success');
                 // Redirige ou gère l'ID de session si besoin
                 setTimeout(function() {
-                    window.location.href = 'test-connect.php'; // Remplace par l'URL cible
+                    window.location.href = 'index.php'; // Remplace par l'URL cible
                 }, 1000);
             },
             error: function(xhr) {
