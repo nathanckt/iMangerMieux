@@ -1,3 +1,9 @@
+<?php
+    $currentPageId = 'accueil';
+    if(isset($_GET['page'])) {
+    $currentPageId = $_GET['page'];
+    }
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -10,5 +16,8 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
     <script src="//cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
     <link rel="stylesheet" href="css/style.css" >
+    <?php
+        echo "<link rel='stylesheet' href='css/{$currentPageId}.css' >"
+    ?>
     <title>iMangerMieux</title>
 </head>

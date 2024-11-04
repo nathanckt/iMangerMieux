@@ -6,6 +6,12 @@
     if(isset($_GET['page'])) {
     $currentPageId = $_GET['page'];
     }
+
+    $login = null;
+    session_start();
+    if(isset($_SESSION['login'])){
+        $login = $_SESSION['login'];
+    }
 ?>
 <body>
     <header class="head">
@@ -14,8 +20,16 @@
             renderMenuToHTML($currentPageId);
         ?>
         <div class="head-profil">
-            <img src="imgs/icone-utilisateur-blanc.svg" alt="Icone Profil" class="icone-profil">
-            <a href="profil.php" class="link-profil">Se connecter</a>
+        <img src="imgs/icone-utilisateur-blanc.svg" alt="Icone Profil" class="icone-profil">
+            
+        <?php
+            if($login != null){
+                echo "<a href='profil.php' class='link-profil'>{$login}</a>";
+            }
+            else{
+                echo "<a href='connect.php' class='link-profil'>Se connecter</a>";
+            }
+        ?>
         </div>
     </header>
     <main>
