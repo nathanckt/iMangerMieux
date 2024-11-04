@@ -1,11 +1,11 @@
 <?php 
-    require_once('template/head.php');
-    require_once('template/menu.php');
-
     $currentPageId = 'accueil';
     if(isset($_GET['page'])) {
     $currentPageId = $_GET['page'];
     }
+    require_once('template/head.php');
+    require_once('template/menu.php');
+
 
     $login = null;
     session_start();

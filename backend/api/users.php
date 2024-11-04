@@ -41,6 +41,23 @@
         return $res;
     }
 
+    function get_user_by_id($db,$login){
+        $sql = "SELECT  u.NOM, u.PRENOM, u.DATE_DE_NAISSANCE, p.LIBELLE_SPORT, s.LIBELLE_SEXE, t.LIBELLE_TRANCHE
+            FROM UTILISATEUR u
+            JOIN PRATIQUE_SPORTIVE p ON u.ID_SPORT = p.ID_SPORT
+            JOIN SEXE s ON u.ID_SEXE = s.ID_SEXE 
+            JOIN TRANCHE_D_AGE t ON u.ID_TRANCHE = t.ID_TRANCHE
+            WHERE LOGIN = :login";
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute([
+            ':login' => $login
+        ]); 
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC); 
+        return $result;
+    }
+
     function create_users($db, $login, $mdp, $nom, $prenom, $mail, $date, $tranche, $sexe, $sport){
 
         $sql = "INSERT INTO UTILISATEUR (LOGIN, ID_SEXE, ID_TRANCHE, ID_SPORT, MOT_DE_PASSE, NOM, PRENOM, MAIL, DATE_DE_NAISSANCE)
@@ -110,7 +127,13 @@
 
     switch($_SERVER['REQUEST_METHOD']){
        case 'GET':
-            if(isset($_GET['populate']) && $_GET['populate'] === '*'){
+            if(isset($_GET['login'])){
+                // $login = $_GET['login'];
+                session_start();
+                $login = $_SESSION['login'];
+                $result = get_user_by_id($pdo,$login);
+            }
+            elseif(isset($_GET['populate']) && $_GET['populate'] === '*'){
                 $result = get_users_full($pdo);
                 foreach ($result as &$user) {
                     $user->REPAS = [];

@@ -1,0 +1,35 @@
+.info{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 40px;
+}
+
+.infos-user{
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 50px;
+}
+
+h3{
+    font-size: 1.8rem;
+    padding: 0;
+    margin: 0;
+    padding-right: 10px;
+}
+
+p{
+    font-size: 1.6rem;
+    padding: 0;
+    margin: 0;
+}
+
+.infos{
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    justify-content: space-around;
+}
