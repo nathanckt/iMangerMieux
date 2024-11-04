@@ -42,7 +42,7 @@
     }
 
     function get_user_by_id($db,$login){
-        $sql = "SELECT  u.NOM, u.PRENOM, u.DATE_DE_NAISSANCE, p.LIBELLE_SPORT, s.LIBELLE_SEXE, t.LIBELLE_TRANCHE
+        $sql = "SELECT  u.NOM, u.PRENOM, u.MAIL, u.DATE_DE_NAISSANCE, p.LIBELLE_SPORT, s.LIBELLE_SEXE, t.LIBELLE_TRANCHE
             FROM UTILISATEUR u
             JOIN PRATIQUE_SPORTIVE p ON u.ID_SPORT = p.ID_SPORT
             JOIN SEXE s ON u.ID_SEXE = s.ID_SEXE 
@@ -82,10 +82,10 @@
 
     }
 
-    function update_users($db, $login, $mdp, $nom, $prenom, $mail, $date, $tranche, $sexe, $sport){
+    function update_users($db, $login, $nom, $prenom, $mail, $date, $tranche, $sexe, $sport){
 
         $sql = "UPDATE UTILISATEUR 
-                SET ID_SEXE = :numberSexe, ID_TRANCHE = :tranche, ID_SPORT = :sport, MOT_DE_PASSE = :mdp, NOM = :nom, PRENOM = :prenom, MAIL = :mail, DATE_DE_NAISSANCE = :date
+                SET ID_SEXE = :numberSexe, ID_TRANCHE = :tranche, ID_SPORT = :sport, NOM = :nom, PRENOM = :prenom, MAIL = :mail, DATE_DE_NAISSANCE = :date
                 WHERE LOGIN = :login";
 
 
@@ -96,7 +96,6 @@
             ':numberSexe' => $sexe,
             ':tranche' => $tranche,
             ':sport' => $sport,
-            ':mdp' => $mdp,
             ':nom' => $nom,
             ':prenom' => $prenom,
             ':mail' => $mail,
@@ -209,11 +208,32 @@
         case 'PUT' : 
             $data = json_decode(file_get_contents("php://input"));
             
-            if(isset($data->login)){
+            session_start();
+            if(isset($_SESSION['login'])){
+                $login = $_SESSION['login'];
+                $nom = $data->NOM;
+                $mail = $data->MAIL;
+                $prenom = $data->PRENOM;
+                $tranche = $data->ID_TRANCHE;
+                $sexe = $data->ID_SEXE;
+                $sport = $data->ID_SPORT;
+                $date = $data->DATE_DE_NAISSANCE;
+
+                $new_users = update_users($pdo, $login, $nom, $prenom, $mail, $date, $tranche, $sexe, $sport);
+
+                if($new_users){
+                    setHeaders();
+                    http_response_code(201); 
+                    exit(json_encode($new_users));
+                } else {
+                    http_response_code(500); 
+                    exit(json_encode(['error' => 'Failed to create user']));
+                }
+
+            } elseif(isset($data->login)){
                 $nom = $data->nom;
                 $mail = $data->mail;
                 $login = $data->login;
-                $mdp = $data->mdp;
                 $prenom = $data->prenom;
                 $tranche = $data->tranche;
                 $sexe = $data->sexe;

@@ -32,39 +32,39 @@
         <div class="infos">
             <div class="info">
             <h3>Nom :</h3>
-            <p class="nom">Test</p>
+            <p id="nom">Test</p>
             </div>
             <div class="info">
             <h3>Prénom :</h3>
-            <p class="prenom">Test</p>
+            <p id="prenom">Test</p>
             </div>
         </div>
         <div class="infos">
             <div class="info">
             <h3>Date de naissance :</h3>
-            <p class="naissance">Test</p>
+            <p id="naissance">Test</p>
             </div>
             <div class="info">
             <h3>Tranche d'âge :</h3>
-            <p class="tranche">Test</p>
+            <p id="tranche">Test</p>
             </div>
         </div>
         <div class="infos">
             <div class="info">
             <h3>Sexe :</h3>
-            <p class="sexe">Test</p>
+            <p id="sexe">Test</p>
             </div>
             <div class="info">
             <h3>Pratique Sportive :</h3>
-            <p class="sport">Test</p>
+            <p id="sport">Test</p>
             </div>
         </div>
         <div class="info">
             <h3>Mail :</h3>
-            <p class="mail">test@test.com</p>
+            <p id="mail">test@test.com</p>
         </div>
 
-        <button class="cta">Modifier</button>
+        <button class="cta btn-modif">Modifier</button>
         
     </div>
     <!-- <form id="modifForm" action="#" method="POST">
