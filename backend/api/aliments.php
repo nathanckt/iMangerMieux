@@ -36,6 +36,23 @@
         return $res;
     }
 
+    function create_aliment($db, $libelle, $type){
+
+        $sql = "INSERT INTO ALIMENT (LIBELLE_ALIMENt, ID_TYPE)
+                    VALUES (:libelleAliment, :idType)";
+
+        $stmt = $db->prepare($sql);
+        
+        $stmt->execute([
+            ':libelleAliment' => $libelle,
+            ':idType' => $type,
+        ]); 
+
+        $user_id = $db->lastInsertId();
+        return ['id' => $user_id, 'libelle' => $libelle, 'id_type' => $type];
+
+    }
+
     // ======================
     // RESPONSES
     // ======================
@@ -66,7 +83,23 @@
             setHeaders();
             exit(json_encode($result));
         case 'POST':
+            $data = json_decode(file_get_contents("php://input"));
 
+            if(isset($data->libelleAliment) && isset($data->idType)){
+                $libelleAliment = $data->libelleAliment;
+                $idType = $data->idType;
+
+                $new_aliment = create_aliment($pdo, $libelleAliment, $idType);
+
+                if($new_aliment){
+                    setHeaders();
+                    http_response_code(201); 
+                    exit(json_encode($new_aliment));
+                } else {
+                    http_response_code(500); 
+                    exit(json_encode(['error' => 'Failed to create user']));
+                }
+            }
         case 'DELETE':
 
         case 'PUT':

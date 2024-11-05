@@ -31,90 +31,6 @@ $(document).ready(function(){
                 }
             ]
         });
-        // $('.table').on('click', '.btn-edit', function() {
-            // let row = $(this).closest('tr');
-            // let userId = $(this).closest('tr').find('td.dt-type-numeric').text();
-            // let cells = row.find("td");
-
-            // cells.each(function(index){
-            //     if((index != 0) && (index < cells.length - 1)){
-            //         let cell = $(this).text();
-            //         $(this).html(`<input type="text" value="${cell}" class="form-control">`);
-            //     }
-            // });
-
-            // $(this).text("Envoyer").removeClass("btn-edit").addClass("btn-send");
-
-
-            // $('.table').on('click', '.btn-send', function(){
-            //     let inputs = row.find("input");
-
-            //     let nom = inputs[0].value;
-            //     let mail = inputs[1].value;
-
-            //     let jsonData = JSON.stringify({
-            //         id: userId,
-            //         name: nom,
-            //         email: mail
-            //     });
-    
-            //     $.ajax({
-            //         url: "http://localhost:8888/IDAW/TP4-REST/exo5/users.php",
-    
-            //         method: "PUT", 
-    
-            //         data: jsonData,
-    
-            //         dataType: "json"
-            //     })
-
-            //     .done(function(){
-            //         let updatedUser = {
-            //             id: userId, 
-            //             name: nom, 
-            //             email: mail 
-            //         };
-
-            //         table.row(row).data(updatedUser).draw();
-
-            //         $(this).text("Modifier").removeClass("btn-send").addClass("btn-edit");
-            //     })
-
-            //     .fail(function(error){
-            //         alert("La requete s'est terminée en erreur :" + JSON.stringify(error));
-            //     })
-            // });
-
-        // });
-
-
-        // $('.table').on('click', '.btn-delete', function() {
-        //     let row = $(this).closest('tr');
-        //     let userId = $(this).closest('tr').find('td.dt-type-numeric').text();
-
-        //     let jsonData = JSON.stringify({
-        //         id: userId
-        //     });
-
-        //     $.ajax({
-        //         url: "http://localhost:8888/IDAW/TP4-REST/exo5/users.php",
-
-        //         method: "DELETE", 
-
-        //         data: jsonData,
-
-        //         dataType: "json"
-        //     })
-
-        //     .done(function(response){
-        //         table.row(row).remove().draw();
-        //     })
-
-        //     .fail(function(error){
-        //         alert("La requete s'est terminée en erreur :" + JSON.stringify(error));
-        //     });
-            
-        // });
 
     })
 
@@ -126,7 +42,52 @@ $(document).ready(function(){
     // GESTION DE L'AJOUT
     //=====================
 
+    // Remplissage du select type
+    $.ajax({
+        url: `${prefix_api}type.php`,
 
+        method: "GET",
+
+        dataType: "json"
+    })
+
+    .done(function(response){
+        const typeSelect = $('#type'); 
+        typeSelect.empty(); 
+
+        response.forEach(type => {
+            typeSelect.append(new Option(type.LIBELLE_TYPE, type.ID_TYPE));
+        });
+    })
+
+    .fail(function(error){
+        alert("La requete s'est terminée en erreur :" + JSON.stringify(error));
+    });
+
+    // Remplissage du select 
+    $.ajax({
+        url: `${prefix_api}nutriments.php`,
+
+        method: "GET",
+
+        dataType: "json"
+    })
+
+    .done(function(response){
+        const nutrimentSelect = $('.libelle-nutri'); 
+        nutrimentSelect.empty(); 
+
+        response.forEach(nutriment => {
+            nutrimentSelect.append(new Option(nutriment.LIBELLE_APPORT, nutriment.ID_APPORT));
+        });
+    })
+
+    .fail(function(error){
+        alert("La requete s'est terminée en erreur :" + JSON.stringify(error));
+    });
+
+
+    // Ajout d'une ligne supplémentaire 
     $("#ajout-aliment").on("click", "#btn-ajout-nutriment", function(event) {
         const currentRow = $(this).closest("tr");
     
@@ -142,5 +103,69 @@ $(document).ready(function(){
     
         return false;
     });
+
+
+    // Gestion de l'envoi du formulaire 
+    $('#ajout-aliment').on('submit', function(event){
+        event.preventDefault();
+        
+        const libelleAliment = $("#libelle").val();
+        const typeAliment = $("#type").val();
+
+        const idsNutriments = $(".libelle-nutri").map(function() {
+            return $(this).val();
+        }).get(); 
+        
+        const pourcentageNutriments = $(".pourcentage-nutri").map(function() {
+            return $(this).val();
+        }).get(); 
+
+        let jsonDataAliment = JSON.stringify({
+            libelleAliment : libelleAliment, 
+            idType : typeAliment
+        })
+
+        $.ajax({
+            url: `${prefix_api}aliments.php`,
+    
+            method: "POST",
+
+            data: jsonDataAliment,
+    
+            dataType:"json"
+        })
+    
+        .done(function(response){
+            const newId = response.id;
+            for (let i = 0; i < idsNutriments.length; i++) {
+                const idNutriment = idsNutriments[i];
+                const pourcentage = pourcentageNutriments[i];
+
+                let jsonDataApport = JSON.stringify({
+                    idAliment: newId,
+                    idApport: idNutriment,
+                    pourcentage: pourcentage
+                });
+
+                $.ajax({
+                    url: `${prefix_api}nutriments.php`,
+                    method: "POST",
+                    data: jsonDataApport,
+                    contentType: "application/json",
+                    dataType: "json"
+                })
+                .done(function(response){
+                    console.log("Apport créé avec succès pour l'aliment ID :", newId);
+                })
+                .fail(function(error){
+                    console.error("Erreur lors de la création de l'apport :", error);
+                });
+            }
+        })
+    
+        .fail(function(error){
+            alert("La requete s'est terminée en erreur :" + JSON.stringify(error));
+        });
+    })
     
 });
