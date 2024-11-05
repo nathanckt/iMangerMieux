@@ -41,6 +41,8 @@
             require_once("error.php");
         ?>
     </main>
-    <script src="js/aliments.js"></script>
+    <?php
+        echo "<script src='js/{$currentPageId}.js'></script>"
+    ?>
 </body>
 </html>

@@ -76,6 +76,11 @@ function get_all_repas($db) {
     return array_values($all_repas);
 }
 
+function create_repas($db,$login,$date){
+    // A FAIRE
+}
+
+
 // ======================
 // RESPONSES
 // ======================
@@ -102,6 +107,39 @@ switch($_SERVER['REQUEST_METHOD']){
         }
 
     case 'POST':
+        $data = json_decode(file_get_contents("php://input"));
+
+        if(isset($data->dateRepas)){
+            $dateRepas = $data->dateRepas;
+        }
+        else{
+            $dateRepas = date('Y-m-d H:i:s');
+        }
+
+        session_start();
+        if(isset($data->login)){
+            $login = $data->login;
+        }
+        elseif (isset($_SESSION['login'])){
+            $login = $_SESSION['login'];
+        }
+        else{
+            http_response_code(500); 
+            exit(json_encode(['error' => 'Login is empty']));
+            break;
+        }
+
+        $newRepasId= create_repas($pdo, $login, $dateRepas);
+
+        if($newRepasId){
+            setHeaders();
+            http_response_code(201); 
+            exit(json_encode($newRepasId));
+        } else {
+            http_response_code(500); 
+            exit(json_encode(['error' => 'Failed to create user']));
+        }
+
     case 'PUT':
     case 'DELETE':
         http_response_code(405);
