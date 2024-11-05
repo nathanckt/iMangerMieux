@@ -38,7 +38,7 @@
 
     function create_aliment($db, $libelle, $type){
 
-        $sql = "INSERT INTO ALIMENT (LIBELLE_ALIMENt, ID_TYPE)
+        $sql = "INSERT INTO ALIMENT (LIBELLE_ALIMENT, ID_TYPE)
                     VALUES (:libelleAliment, :idType)";
 
         $stmt = $db->prepare($sql);

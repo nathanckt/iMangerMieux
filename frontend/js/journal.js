@@ -80,12 +80,107 @@ $(document).ready(function(){
         })
 
         .done(function(response){
-            // A COMPLETER
+            const newId = response.id;
+            for (let i = 0; i < idsAliments.length; i++) {
+                const idAliment = idsAliments[i];
+                const quantite = quantitesAliments[i];
+
+                let jsonDataApport = JSON.stringify({
+                    idRepas: newId,
+                    idAliment: idAliment,
+                    quantite: quantite
+                });
+
+                $.ajax({
+                    url: `${prefix_api}contient.php`,
+                    method: "POST",
+                    data: jsonDataApport,
+                    contentType: "application/json",
+                    dataType: "json"
+                })
+                .done(function(response){
+                    console.log("Apport créé avec succès pour l'aliment ID :", newId);
+                })
+                .fail(function(error){
+                    console.error("Erreur lors de la création de l'apport :", error);
+                });
+            }
         })
         
         .fail(function(error){
             console.error("Erreur lors de la création de l'apport :", error);
         });
     })
+
+    //========================
+    // AFFICHAGE DE LA TABLE 
+    //========================
+
+    let table;
+
+    $.ajax({
+        url: `${prefix_api}repas.php`,
+
+        method: "GET",
+
+        dataType: "json"
+    })
+
+    .done(function(response){
+        table = $('.table').DataTable({
+            data: response,
+            columns: [
+                { data: 'ID_REPAS' }, 
+                { data: 'DATE' },    
+                { 
+                    data: 'ALIMENTS', 
+                    render: function(data, type, row) {
+                        // Combine les noms des aliments avec un point-virgule
+                        return data.map(aliment => aliment.LIBELLE_ALIMENT).join('; ');
+                    }
+                },
+                {
+                    data: null, 
+                    defaultContent: `
+                             <button class="cta cta--small btn-edit" >Modifier</button>
+                             <button class="cta cta--small btn-delete">Supprimer</button>
+                         `,
+                    target: -1
+                }
+            ]
+        });
+
+    })
+
+    .fail(function(error){
+        alert("La requete s'est terminée en erreur :" + JSON.stringify(error));
+    });
+
+
+    //====================
+    // GESTION SUPPRIMER
+    //====================
+
+    $('.table').on('click', '.btn-delete', function() {
+        let row = $(this).closest('tr');
+        let repasId = $(this).closest('tr').find('td.dt-type-numeric').text();
+
+        $.ajax({
+            url: `${prefix_api}repas.php?id=${repasId}`,
+
+            method: "DELETE", 
+
+            dataType: "json"
+        })
+
+        .done(function(response){
+            table.row(row).remove().draw();
+        })
+
+        .fail(function(error){
+            alert("La requete s'est terminée en erreur :" + JSON.stringify(error));
+        });
+        
+    });
 
 })

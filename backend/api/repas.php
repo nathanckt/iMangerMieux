@@ -77,9 +77,44 @@ function get_all_repas($db) {
 }
 
 function create_repas($db,$login,$date){
-    // A FAIRE
+    $sql = "INSERT INTO REPAS (ID_REPAS, LOGIN, DATE)
+            VALUES (:idRepas, :login, :date)";
+
+    $stmt = $db->prepare($sql);
+        
+    $stmt->execute([
+        ':idRepas' => NULL,
+        ':login' => $login,
+        ':date' => $date,
+    ]); 
+
+    $newId = $db->lastInsertId();
+    return ['id' => $newId, 'login' => $login, 'date' => $date];
 }
 
+function delete_repas($db,$id){
+    $sql = "DELETE FROM REPAS WHERE ID_REPAS = :idRepas";
+
+    $stmt = $db->prepare($sql);
+        
+    $stmt->execute([
+        ':idRepas' => $id,
+    ]); 
+
+    return true;
+}
+
+function delete_contient($db, $id){
+    $sql = "DELETE FROM CONTIENT WHERE ID_REPAS = :idRepas";
+
+    $stmt = $db->prepare($sql);
+        
+    $stmt->execute([
+        ':idRepas' => $id,
+    ]); 
+
+    return true;
+}
 
 // ======================
 // RESPONSES
@@ -120,7 +155,7 @@ switch($_SERVER['REQUEST_METHOD']){
         if(isset($data->login)){
             $login = $data->login;
         }
-        elseif (isset($_SESSION['login'])){
+        elseif(isset($_SESSION['login'])){
             $login = $_SESSION['login'];
         }
         else{
@@ -142,6 +177,23 @@ switch($_SERVER['REQUEST_METHOD']){
 
     case 'PUT':
     case 'DELETE':
+        if(isset($_GET['id'])){
+            $idRepas = $_GET['id'];
+            if(delete_contient($pdo,$idRepas)){
+                if(delete_repas($pdo,$idRepas)){
+                    http_response_code(201); 
+                    exit(json_encode(['succes' => 'Repas delete sucessfully']));
+                }
+                else{
+                    http_response_code(405);
+                    exit(json_encode(['error' => 'Failed to delete repas but contient deleted']));
+                }
+            }
+            else{
+                http_response_code(405);
+                exit(json_encode(['error' => 'Failed to delete contient']));
+            }
+        }
         http_response_code(405);
-        exit(json_encode(['error' => 'Method not allowed']));
+        exit(json_encode(['error' => 'Failed to delete repas']));
 }
