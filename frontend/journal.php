@@ -13,9 +13,8 @@
     </tbody>
     </table>
 </section>
-
 <section class="ajout">
-    <h1>Ajouter un repas</h1>
+    <h1 class="form-titre">Ajouter un repas</h1>
     <form id="ajout-repas" action="#" method="POST">
     <table>
         <tr>
