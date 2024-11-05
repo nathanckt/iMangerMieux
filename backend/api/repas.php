@@ -116,6 +116,21 @@ function delete_contient($db, $id){
     return true;
 }
 
+function update_repas($db,$id,$date){
+    $sql = "UPDATE REPAS 
+            SET DATE = :date
+            WHERE ID_REPAS = :id";
+
+    $stmt = $db->prepare($sql);
+        
+    $stmt->execute([
+        ':date' => $date,
+        ':id' => $id,
+    ]); 
+
+    return true;
+}
+
 // ======================
 // RESPONSES
 // ======================
@@ -144,8 +159,11 @@ switch($_SERVER['REQUEST_METHOD']){
     case 'POST':
         $data = json_decode(file_get_contents("php://input"));
 
-        if(isset($data->dateRepas)){
-            $dateRepas = $data->dateRepas;
+        if(isset($data->dateRepas) && isset($data->heureRepas)){
+            $date = $data->dateRepas;
+            $heureRepas = $data->heureRepas;
+            $dateRepas =  $date . ' ' . $time;
+
         }
         else{
             $dateRepas = date('Y-m-d H:i:s');
@@ -176,9 +194,26 @@ switch($_SERVER['REQUEST_METHOD']){
         }
 
     case 'PUT':
-        // A FAIRE 
+        $data = json_decode(file_get_contents("php://input"));
 
-        
+        if(isset($data->idRepas) && isset($data->dateRepas) && isset($data->heureRepas)){
+            $dateRepas = $data->dateRepas . ' ' . $data->heureRepas;
+            $idRepas = $data->idRepas;
+            if(update_repas($pdo,$idRepas,$dateRepas)){
+                http_response_code(201); 
+                exit(json_encode(['succes' => 'Repas update sucessfully']));
+            }
+            else{
+                http_response_code(405);
+                exit(json_encode(['error' => 'Failed to delete contient']));
+            }
+        }
+        else{
+            http_response_code(500); 
+            exit(json_encode(['error' => 'Failed to create user']));
+        }
+
+
     case 'DELETE':
         if(isset($_GET['id'])){
             $idRepas = $_GET['id'];

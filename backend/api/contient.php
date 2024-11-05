@@ -25,7 +25,22 @@
 
         return true;
     }
+    
+    function update_contient($db, $idRepas, $idAliment, $quantite){
+        $sql = "UPDATE CONTIENT
+                SET QUANTITE = :quantite
+                WHERE ID_REPAS = :idRepas AND ID_ALIMENT = :idAliment";
 
+        $stmt = $db->prepare($sql);
+        
+        $stmt->execute([
+            ':idRepas' => $idRepas,
+            ':idAliment' => $idAliment,
+            ':quantite' => $quantite,
+        ]); 
+
+        return true;
+    }
     // ======================
     // RESPONSES
     // ======================
@@ -55,5 +70,24 @@
                 exit(json_encode(['error' => 'Params are empty ']));
             }
         case 'PUT': 
-            // A FAIRE 
+            $data = json_decode(file_get_contents("php://input"));
+
+            if(isset($data->idRepas) && isset($data->idAliment) && isset($data->quantite)){
+                $quantite = $data->quantite;
+                $idRepas = $data->idRepas;
+                $idAliment = $data->idAliment;
+
+                if(update_contient($pdo,$idRepas,$idAliment,$quantite)){
+                    http_response_code(201); 
+                    exit(json_encode(['succes' => 'Contient update sucessfully']));
+                }
+                else{
+                    http_response_code(405);
+                    exit(json_encode(['error' => 'Failed to update contient']));
+                }
+            }
+            else{
+                http_response_code(500); 
+                exit(json_encode(['error' => 'Failed to update contient']));
+            }
     }

@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
     let listeAliments;
+    let editModif = false;
     //=====================
     // AFFICHAGE DU SELECT
     //=====================
@@ -44,59 +45,62 @@ $(document).ready(function(){
     //===================================
 
     $('#ajout-repas').on("submit", function(event){
-        event.preventDefault();
+        if(!editModif){
 
-        const dateRepas = $("#date").val();
-        const heureRepas = $("#time").val();
-        const idsAliments = $(".libelle-aliment").map(function(){
-            return $(this).val();
-        }).get();
-        const quantitesAliments = $(".quantite").map(function(){
-            return $(this).val();
-        }).get();
-
-        let jsonDataRepas = JSON.stringify({
-            dateRepas: dateRepas,
-            heureRepas: heureRepas
-        });
-
-        $.ajax({
-            url: `${prefix_api}repas.php`,
-            method: "POST",
-            data: jsonDataRepas,
-            contentType: "application/json",
-            dataType:"json"
-        })
-        .done(function(response){
-            const newId = response.id;
-            for (let i = 0; i < idsAliments.length; i++) {
-                const idAliment = idsAliments[i];
-                const quantite = quantitesAliments[i];
-
-                let jsonDataApport = JSON.stringify({
-                    idRepas: newId,
-                    idAliment: idAliment,
-                    quantite: quantite
-                });
-
-                $.ajax({
-                    url: `${prefix_api}contient.php`,
-                    method: "POST",
-                    data: jsonDataApport,
-                    contentType: "application/json",
-                    dataType: "json"
-                })
-                .done(function(response){
-                    console.log("Apport créé avec succès pour l'aliment ID :", newId);
-                })
-                .fail(function(error){
-                    console.error("Erreur lors de la création de l'apport :", error);
-                });
-            }
-        })
-        .fail(function(error){
-            console.error("Erreur lors de la création de l'apport :", error);
-        });
+            event.preventDefault();
+    
+            const dateRepas = $("#date").val();
+            const heureRepas = $("#time").val();
+            const idsAliments = $(".libelle-aliment").map(function(){
+                return $(this).val();
+            }).get();
+            const quantitesAliments = $(".quantite").map(function(){
+                return $(this).val();
+            }).get();
+    
+            let jsonDataRepas = JSON.stringify({
+                dateRepas: dateRepas,
+                heureRepas: heureRepas
+            });
+    
+            $.ajax({
+                url: `${prefix_api}repas.php`,
+                method: "POST",
+                data: jsonDataRepas,
+                contentType: "application/json",
+                dataType:"json"
+            })
+            .done(function(response){
+                const newId = response.id;
+                for (let i = 0; i < idsAliments.length; i++) {
+                    const idAliment = idsAliments[i];
+                    const quantite = quantitesAliments[i];
+    
+                    let jsonDataApport = JSON.stringify({
+                        idRepas: newId,
+                        idAliment: idAliment,
+                        quantite: quantite
+                    });
+    
+                    $.ajax({
+                        url: `${prefix_api}contient.php`,
+                        method: "POST",
+                        data: jsonDataApport,
+                        contentType: "application/json",
+                        dataType: "json"
+                    })
+                    .done(function(response){
+                        console.log("Apport créé avec succès pour l'aliment ID :", newId);
+                    })
+                    .fail(function(error){
+                        console.error("Erreur lors de la création de l'apport :", error);
+                    });
+                }
+            })
+            .fail(function(error){
+                console.error("Erreur lors de la création de l'apport :", error);
+            });
+        }
     });
 
     //========================
@@ -169,6 +173,7 @@ $(document).ready(function(){
         const row = $(this).closest('tr');
         const repasId = row.find('td:first').text();
         idRepasModif = repasId;
+        editModif = true;
         $("#ajout-repas").attr("id", "modif-repas");
 
         $.ajax({
@@ -233,85 +238,94 @@ $(document).ready(function(){
     //=========================
 
     $('#modif-repas').on("submit", function(event) {
-        event.preventDefault();
-
-        const dateRepas = $("#date").val();
-        const heureRepas = $("#time").val();
-        const idsAliments = $(".libelle-aliment").map(function() {
-            return $(this).val();
-        }).get();
-        const quantitesAliments = $(".quantite").map(function() {
-            return $(this).val();
-        }).get();
-
-        const jsonDataRepas = JSON.stringify({
-            dateRepas: dateRepas,
-            heureRepas: heureRepas,
-            idRepas: idRepasModif,  
-        });
-
-        $.ajax({
-            url: `${prefix_api}repas.php`,
-            method: "PUT",
-            data: jsonDataRepas,
-            contentType: "application/json",
-            dataType: "json"
-        })
-        .done(function(response) {
-            // BOUCLE => Les x premiers en UPDATE le reste en POST
-            for (let i = 0; i < idsAliments.length; i++) {
-                const idAliment = idsAliments[i];
-                const quantite = quantitesAliments[i];
-
-                let jsonDataApport = JSON.stringify({
-                    idRepas: newId,
-                    idAliment: idAliment,
-                    quantite: quantite
-                });
-                if(i < numberOfAliments){
-                    $.ajax({
-                        url: `${prefix_api}contient.php`,
-                        method: "PUT",
-                        data: jsonDataApport,
-                        contentType: "application/json",
-                        dataType: "json"
-                    })
-                    .done(function(response){
-                        console.log("Apport mis à jour avec succès pour l'aliment ID :", newId);
-                    })
-                    .fail(function(error){
-                        console.error("Erreur lors de la mise à jour de l'apport :", error);
+        if(editModif){
+            event.preventDefault();
+    
+            const dateRepas = $("#date").val();
+            const heureRepas = $("#time").val();
+            const idsAliments = $(".libelle-aliment").map(function() {
+                return $(this).val();
+            }).get();
+            const quantitesAliments = $(".quantite").map(function() {
+                return $(this).val();
+            }).get();
+    
+            const jsonDataRepas = JSON.stringify({
+                dateRepas: dateRepas,
+                heureRepas: heureRepas,
+                idRepas: idRepasModif,  
+            });
+    
+            $.ajax({
+                url: `${prefix_api}repas.php`,
+                method: "PUT",
+                data: jsonDataRepas,
+                contentType: "application/json",
+                dataType: "json"
+            })
+            .done(function(response) {
+                // BOUCLE => Les x premiers en UPDATE le reste en POST
+                for (let i = 0; i < idsAliments.length; i++) {
+                    const idAliment = idsAliments[i];
+                    const quantite = quantitesAliments[i];
+    
+                    let jsonDataApport = JSON.stringify({
+                        idRepas: newId,
+                        idAliment: idAliment,
+                        quantite: quantite
                     });
+                    if(i < numberOfAliments){
+                        $.ajax({
+                            url: `${prefix_api}contient.php`,
+                            method: "PUT",
+                            data: jsonDataApport,
+                            contentType: "application/json",
+                            dataType: "json"
+                        })
+                        .done(function(response){
+                            console.log("Apport mis à jour avec succès pour l'aliment ID :", newId);
+                        })
+                        .fail(function(error){
+                            console.error("Erreur lors de la mise à jour de l'apport :", error);
+                        });
+                    }
+                    else{
+                        $.ajax({
+                            url: `${prefix_api}contient.php`,
+                            method: "POST",
+                            data: jsonDataApport,
+                            contentType: "application/json",
+                            dataType: "json"
+                        })
+                        .done(function(response){
+                            console.log("Apport créé avec succès pour l'aliment ID :", newId);
+                        })
+                        .fail(function(error){
+                            console.error("Erreur lors de la création de l'apport :", error);
+                        });
+                    }
                 }
-                else{
-                    $.ajax({
-                        url: `${prefix_api}contient.php`,
-                        method: "POST",
-                        data: jsonDataApport,
-                        contentType: "application/json",
-                        dataType: "json"
-                    })
-                    .done(function(response){
-                        console.log("Apport créé avec succès pour l'aliment ID :", newId);
-                    })
-                    .fail(function(error){
-                        console.error("Erreur lors de la création de l'apport :", error);
-                    });
-                }
-            }
-
-            
-                $("#ajout-repas")[0].reset();
-                $('#ajout-repas input[type="submit"]').val("Créer un aliment");
-                $('section.ajout h1').text("Ajouter un repas");
-                $("#ajout-repas").removeData("editMode").removeData("repasId");
-                table.ajax.reload();
-            
-        })
-        .fail(function(error) {
-            alert("Erreur lors de l'enregistrement du repas :" + JSON.stringify(error));
-        });
+    
+                
+                    $("#ajout-repas")[0].reset();
+                    $('#ajout-repas input[type="submit"]').val("Créer un aliment");
+                    $('section.ajout h1').text("Ajouter un repas");
+                    $("#ajout-repas").removeData("editMode").removeData("repasId");
+                    table.ajax.reload();
+                
+            })
+            .fail(function(error) {
+                alert("Erreur lors de l'enregistrement du repas :" + JSON.stringify(error));
+            });
+        }
+        editModif = false;
     });
 
 
 });
+
+
+
+
+// TODO : Bloquer la modification d'un aliment (seulement la quantité)
+// TODO : Gestion du modifier qui bug arrrrrrrrgh
