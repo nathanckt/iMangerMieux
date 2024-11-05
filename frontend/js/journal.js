@@ -46,9 +46,9 @@ $(document).ready(function(){
 
     $('#ajout-repas').on("submit", function(event){
         if(!editModif){
-
+            
             event.preventDefault();
-    
+            
             const dateRepas = $("#date").val();
             const heureRepas = $("#time").val();
             const idsAliments = $(".libelle-aliment").map(function(){
@@ -57,12 +57,13 @@ $(document).ready(function(){
             const quantitesAliments = $(".quantite").map(function(){
                 return $(this).val();
             }).get();
-    
+            
             let jsonDataRepas = JSON.stringify({
                 dateRepas: dateRepas,
                 heureRepas: heureRepas
             });
-    
+            
+            console.log(jsonDataRepas);
             $.ajax({
                 url: `${prefix_api}repas.php`,
                 method: "POST",
@@ -71,17 +72,18 @@ $(document).ready(function(){
                 dataType:"json"
             })
             .done(function(response){
+                console.log("yeahh");
                 const newId = response.id;
                 for (let i = 0; i < idsAliments.length; i++) {
                     const idAliment = idsAliments[i];
                     const quantite = quantitesAliments[i];
-    
+                    
                     let jsonDataApport = JSON.stringify({
                         idRepas: newId,
                         idAliment: idAliment,
                         quantite: quantite
                     });
-    
+                    
                     $.ajax({
                         url: `${prefix_api}contient.php`,
                         method: "POST",
@@ -170,11 +172,11 @@ $(document).ready(function(){
     let idRepasModif = 0;
 
     $('.table').on('click', '.btn-edit', function() {
-        const row = $(this).closest('tr');
+        const row = $(this).closest('tr'); // PROBLEME ICI CHEF 
+        console.log(row);
         const repasId = row.find('td:first').text();
         idRepasModif = repasId;
         editModif = true;
-        $("#ajout-repas").attr("id", "modif-repas");
 
         $.ajax({
             url: `${prefix_api}repas.php?id=${repasId}`,
@@ -187,8 +189,8 @@ $(document).ready(function(){
             $("#date").val(repasData.DATE.split(" ")[0]); 
             $("#time").val(repasData.DATE.split(" ")[1]);
 
-            $("#modif-repas .libelle-aliment").empty();
-            $("#modif-repas .quantite").empty();
+            $("#ajout-repas .libelle-aliment").empty();
+            $("#ajout-repas .quantite").empty();
         
             if (Array.isArray(repasData.ALIMENTS)) {
                 repasData.ALIMENTS.forEach((aliment, index) => {
@@ -200,14 +202,15 @@ $(document).ready(function(){
                         listeAliments.forEach(aliment => {
                         alimentSelect.append(new Option(aliment.LIBELLE_ALIMENT, aliment.ID_ALIMENT));
                         });
+                        $(".libelle-aliment").val(aliment.ID_ALIMENT);
                         $(".quantite").val(aliment.QUANTITE);
                     } else {
-                        const newRow = $("#modif-repas table tr").eq(1).clone();
+                        const newRow = $("#ajout-repas table tr").eq(1).clone();
                         newRow.find(".libelle-aliment").val(aliment.ID_ALIMENT);
                         newRow.find(".quantite").val(aliment.QUANTITE);
                         $("#btn-ajout-aliment").remove();
-                        $('#modif-repas input[type="submit"]').remove();
-                        $("#modif-repas table").find('tr:last').after(newRow);
+                        $('#ajout-repas input[type="submit"]').remove();
+                        $("#ajout-repas table").find('tr:last').after(newRow);
                     }
                 });
             } else {
@@ -222,10 +225,10 @@ $(document).ready(function(){
         `;
 
             // Ajouter la nouvelle ligne à la table
-            $("#modif-repas table").append(newRow);
+            $("#ajout-repas table").append(newRow);
     
-            $('#modif-repas input[type="submit"]').val("Modifier le repas");
-            $("#modif-repas").data("editMode", true).data("repasId", repasData.ID_REPAS);
+            $('#ajout-repas input[type="submit"]').val("Modifier le repas");
+            $("#ajout-repas").data("editMode", true).data("repasId", repasData.ID_REPAS);
         })
         .fail(function(error) {
             alert("Erreur lors de la récupération des données du repas :" + JSON.stringify(error));
@@ -233,12 +236,13 @@ $(document).ready(function(){
     
     });
 
-    //=========================
+    //============================
     // GESTION DE L'ENVOI MODIFIÉ
-    //=========================
+    //============================
 
-    $('#modif-repas').on("submit", function(event) {
+    $('#ajout-repas').on("submit", function(event) {
         if(editModif){
+            console.log("coucou");
             event.preventDefault();
     
             const dateRepas = $("#date").val();
@@ -246,6 +250,7 @@ $(document).ready(function(){
             const idsAliments = $(".libelle-aliment").map(function() {
                 return $(this).val();
             }).get();
+
             const quantitesAliments = $(".quantite").map(function() {
                 return $(this).val();
             }).get();
@@ -270,12 +275,15 @@ $(document).ready(function(){
                     const quantite = quantitesAliments[i];
     
                     let jsonDataApport = JSON.stringify({
-                        idRepas: newId,
+                        idRepas: idRepasModif,
                         idAliment: idAliment,
-                        quantite: quantite
+                        quantite: quantite,
                     });
+
+                    console.log(jsonDataApport);
                     if(i < numberOfAliments){
                         $.ajax({
+                    
                             url: `${prefix_api}contient.php`,
                             method: "PUT",
                             data: jsonDataApport,
@@ -283,13 +291,14 @@ $(document).ready(function(){
                             dataType: "json"
                         })
                         .done(function(response){
-                            console.log("Apport mis à jour avec succès pour l'aliment ID :", newId);
+                            console.log("Apport mis à jour avec succès pour l'aliment ID :", idRepasModif);
                         })
                         .fail(function(error){
                             console.error("Erreur lors de la mise à jour de l'apport :", error);
                         });
                     }
                     else{
+                        console.log('là');
                         $.ajax({
                             url: `${prefix_api}contient.php`,
                             method: "POST",
@@ -298,7 +307,7 @@ $(document).ready(function(){
                             dataType: "json"
                         })
                         .done(function(response){
-                            console.log("Apport créé avec succès pour l'aliment ID :", newId);
+                            console.log("Apport créé avec succès pour l'aliment ID :", idRepasModif);
                         })
                         .fail(function(error){
                             console.error("Erreur lors de la création de l'apport :", error);
@@ -307,11 +316,11 @@ $(document).ready(function(){
                 }
     
                 
-                    $("#ajout-repas")[0].reset();
-                    $('#ajout-repas input[type="submit"]').val("Créer un aliment");
-                    $('section.ajout h1').text("Ajouter un repas");
-                    $("#ajout-repas").removeData("editMode").removeData("repasId");
-                    table.ajax.reload();
+                    // $("#ajout-repas")[0].reset();
+                    // $('#ajout-repas input[type="submit"]').val("Créer un aliment");
+                    // $('section.ajout h1').text("Ajouter un repas");
+                    // $("#ajout-repas").removeData("editMode").removeData("repasId");
+                    // table.ajax.reload();
                 
             })
             .fail(function(error) {
@@ -329,3 +338,4 @@ $(document).ready(function(){
 
 // TODO : Bloquer la modification d'un aliment (seulement la quantité)
 // TODO : Gestion du modifier qui bug arrrrrrrrgh
+// TODO : Gestion de la date null

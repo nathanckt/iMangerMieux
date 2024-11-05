@@ -162,7 +162,7 @@ switch($_SERVER['REQUEST_METHOD']){
         if(isset($data->dateRepas) && isset($data->heureRepas)){
             $date = $data->dateRepas;
             $heureRepas = $data->heureRepas;
-            $dateRepas =  $date . ' ' . $time;
+            $dateRepas =  $date . ' ' . $heureRepas;
 
         }
         else{
