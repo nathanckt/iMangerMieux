@@ -54,4 +54,6 @@
                 http_response_code(500); 
                 exit(json_encode(['error' => 'Params are empty ']));
             }
+        case 'PUT': 
+            // A FAIRE 
     }

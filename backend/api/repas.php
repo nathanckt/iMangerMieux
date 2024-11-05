@@ -176,6 +176,9 @@ switch($_SERVER['REQUEST_METHOD']){
         }
 
     case 'PUT':
+        // A FAIRE 
+
+        
     case 'DELETE':
         if(isset($_GET['id'])){
             $idRepas = $_GET['id'];

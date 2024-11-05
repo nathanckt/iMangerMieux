@@ -64,6 +64,7 @@ $(document).ready(function(){
             url: `${prefix_api}repas.php`,
             method: "POST",
             data: jsonDataRepas,
+            contentType: "application/json",
             dataType:"json"
         })
         .done(function(response){
@@ -161,9 +162,14 @@ $(document).ready(function(){
     // GESTION MODIFIER
     //====================
 
+    let numberOfAliments = 0;
+    let idRepasModif = 0;
+
     $('.table').on('click', '.btn-edit', function() {
         const row = $(this).closest('tr');
         const repasId = row.find('td:first').text();
+        idRepasModif = repasId;
+        $("#ajout-repas").attr("id", "modif-repas");
 
         $.ajax({
             url: `${prefix_api}repas.php?id=${repasId}`,
@@ -176,11 +182,12 @@ $(document).ready(function(){
             $("#date").val(repasData.DATE.split(" ")[0]); 
             $("#time").val(repasData.DATE.split(" ")[1]);
 
-            $("#ajout-repas .libelle-aliment").empty();
-            $("#ajout-repas .quantite").empty();
+            $("#modif-repas .libelle-aliment").empty();
+            $("#modif-repas .quantite").empty();
         
             if (Array.isArray(repasData.ALIMENTS)) {
                 repasData.ALIMENTS.forEach((aliment, index) => {
+                    numberOfAliments = numberOfAliments + 1;
                     if (index === 0) {
                         const alimentSelect = $('.libelle-aliment'); 
                         alimentSelect.empty(); 
@@ -190,12 +197,12 @@ $(document).ready(function(){
                         });
                         $(".quantite").val(aliment.QUANTITE);
                     } else {
-                        const newRow = $("#ajout-repas table tr").eq(1).clone();
+                        const newRow = $("#modif-repas table tr").eq(1).clone();
                         newRow.find(".libelle-aliment").val(aliment.ID_ALIMENT);
                         newRow.find(".quantite").val(aliment.QUANTITE);
                         $("#btn-ajout-aliment").remove();
-                        $('#ajout-repas input[type="submit"]').remove();
-                        $("#ajout-repas table").find('tr:last').after(newRow);
+                        $('#modif-repas input[type="submit"]').remove();
+                        $("#modif-repas table").find('tr:last').after(newRow);
                     }
                 });
             } else {
@@ -210,23 +217,22 @@ $(document).ready(function(){
         `;
 
             // Ajouter la nouvelle ligne à la table
-            $("#ajout-repas table").append(newRow);
+            $("#modif-repas table").append(newRow);
     
-            $('#ajout-repas input[type="submit"]').val("Modifier le repas");
-            $("#ajout-repas").data("editMode", true).data("repasId", repasData.ID_REPAS);
+            $('#modif-repas input[type="submit"]').val("Modifier le repas");
+            $("#modif-repas").data("editMode", true).data("repasId", repasData.ID_REPAS);
         })
         .fail(function(error) {
             alert("Erreur lors de la récupération des données du repas :" + JSON.stringify(error));
         });
-        
-        
+    
     });
 
     //=========================
     // GESTION DE L'ENVOI MODIFIÉ
     //=========================
 
-    $('#ajout-repas').on("submit", function(event) {
+    $('#modif-repas').on("submit", function(event) {
         event.preventDefault();
 
         const dateRepas = $("#date").val();
@@ -241,34 +247,66 @@ $(document).ready(function(){
         const jsonDataRepas = JSON.stringify({
             dateRepas: dateRepas,
             heureRepas: heureRepas,
-            aliments: idsAliments.map((id, index) => ({
-                idAliment: id,
-                quantite: quantitesAliments[index]
-            }))
+            idRepas: idRepasModif,  
         });
 
-        const isEditMode = $(this).data("editMode");
-        const url = isEditMode ? `${prefix_api}repas.php?id=${$(this).data("repasId")}` : `${prefix_api}repas.php`;
-        const method = isEditMode ? "PUT" : "POST";
-
         $.ajax({
-            url: url,
-            method: method,
+            url: `${prefix_api}repas.php`,
+            method: "PUT",
             data: jsonDataRepas,
             contentType: "application/json",
             dataType: "json"
         })
         .done(function(response) {
-            alert(isEditMode ? "Repas modifié avec succès !" : "Repas ajouté avec succès !");
-            if (isEditMode) {
+            // BOUCLE => Les x premiers en UPDATE le reste en POST
+            for (let i = 0; i < idsAliments.length; i++) {
+                const idAliment = idsAliments[i];
+                const quantite = quantitesAliments[i];
+
+                let jsonDataApport = JSON.stringify({
+                    idRepas: newId,
+                    idAliment: idAliment,
+                    quantite: quantite
+                });
+                if(i < numberOfAliments){
+                    $.ajax({
+                        url: `${prefix_api}contient.php`,
+                        method: "PUT",
+                        data: jsonDataApport,
+                        contentType: "application/json",
+                        dataType: "json"
+                    })
+                    .done(function(response){
+                        console.log("Apport mis à jour avec succès pour l'aliment ID :", newId);
+                    })
+                    .fail(function(error){
+                        console.error("Erreur lors de la mise à jour de l'apport :", error);
+                    });
+                }
+                else{
+                    $.ajax({
+                        url: `${prefix_api}contient.php`,
+                        method: "POST",
+                        data: jsonDataApport,
+                        contentType: "application/json",
+                        dataType: "json"
+                    })
+                    .done(function(response){
+                        console.log("Apport créé avec succès pour l'aliment ID :", newId);
+                    })
+                    .fail(function(error){
+                        console.error("Erreur lors de la création de l'apport :", error);
+                    });
+                }
+            }
+
+            
                 $("#ajout-repas")[0].reset();
                 $('#ajout-repas input[type="submit"]').val("Créer un aliment");
                 $('section.ajout h1').text("Ajouter un repas");
                 $("#ajout-repas").removeData("editMode").removeData("repasId");
                 table.ajax.reload();
-            } else {
-                table.ajax.reload();
-            }
+            
         })
         .fail(function(error) {
             alert("Erreur lors de l'enregistrement du repas :" + JSON.stringify(error));
