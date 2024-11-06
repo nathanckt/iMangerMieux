@@ -2,7 +2,10 @@
     <h1>
         Cette semaine
     </h1>
-    <div id="chartdiv"></div>
+    <div class="charts">
+        <div id="chartdiv"></div>
+        <div id="chartdiv2"></div>
+    </div>
     <!-- INSERER DES GRAPHIQUES ICI -->
 </section>
 
