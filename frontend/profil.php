@@ -65,25 +65,13 @@
             <p id="mail">test@test.com</p>
         </div>
 
-        <button class="cta btn-modif">Modifier</button>
+        <div class="div-bouton">
+
+            <a class="cta btn-modif">Modifier</a>
+            <a class="cta btn-deco" href="template/deconnected.php">Déconnecter</a>
+        </div>
         
     </div>
-    <!-- <form id="modifForm" action="#" method="POST">
-    <table>
-        <tr>
-            <th>Login :</th>
-            <td><input type="text" id="login" name="login" required></td>
-        </tr>
-        <tr>
-            <th>Mot de Passe :</th>
-            <td><input type="password" id="mdp" name="mdp" required></td>
-        </tr>
-        <tr>
-            <th></th>
-            <td><input type="submit" value="Se Connecter"/></td>
-        </tr>
-    </table>
-    </form> -->
     </main>
     <script src="js/profil.js"></script>
 </body>

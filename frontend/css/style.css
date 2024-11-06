@@ -156,3 +156,14 @@ p{
     left: 0px;
     rotate: 15deg;
 }
+
+.cta--small{
+    font-size: 1rem;
+    border: none;
+    padding: 10px 0px;
+    width: 80px;
+}
+
+tbody{
+    font-size: 1.7rem;
+}

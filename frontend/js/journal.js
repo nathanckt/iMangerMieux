@@ -172,19 +172,19 @@ $(document).ready(function(){
     let idRepasModif = 0;
 
     $('.table').on('click', '.btn-edit', function() {
-        const row = $(this).closest('tr'); // PROBLEME ICI CHEF 
-        console.log(row);
+        const row = $(this).closest('tr'); 
         const repasId = row.find('td:first').text();
         idRepasModif = repasId;
         editModif = true;
 
         $.ajax({
-            url: `${prefix_api}repas.php?id=${repasId}`,
+            url: `${prefix_api}repas.php?id_repas=${repasId}`,
             method: "GET",
             dataType: "json"
         })
         .done(function(repas) {
-            const repasData = repas[0]; 
+            const repasData = repas; 
+            console.log(repasData);
 
             $("#date").val(repasData.DATE.split(" ")[0]); 
             $("#time").val(repasData.DATE.split(" ")[1]);
@@ -209,9 +209,10 @@ $(document).ready(function(){
                         newRow.find(".libelle-aliment").val(aliment.ID_ALIMENT);
                         newRow.find(".quantite").val(aliment.QUANTITE);
                         $("#btn-ajout-aliment").remove();
-                        $('#ajout-repas input[type="submit"]').remove();
+                        //$('#ajout-repas input[type="submit"]').remove();
                         $("#ajout-repas table").find('tr:last').after(newRow);
                     }
+                    $('#ajout-repas input[type="submit"]').remove();
                 });
             } else {
                 console.warn("Aucun aliment trouvé pour ce repas.");
@@ -242,7 +243,6 @@ $(document).ready(function(){
 
     $('#ajout-repas').on("submit", function(event) {
         if(editModif){
-            console.log("coucou");
             event.preventDefault();
     
             const dateRepas = $("#date").val();
@@ -331,11 +331,73 @@ $(document).ready(function(){
     });
 
 
+
+    //===========================
+    // AFFICHAGE DES GRAPHIQUES
+    //===========================
+
+    am5.ready(function() {
+
+        // Create root element
+        // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+        var root = am5.Root.new("chartdiv");
+        
+        // Set themes
+        // https://www.amcharts.com/docs/v5/concepts/themes/
+        root.setThemes([
+          am5themes_Animated.new(root)
+        ]);
+        
+        // Create chart
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
+        var chart = root.container.children.push(
+          am5percent.PieChart.new(root, {
+            endAngle: 270
+          })
+        );
+        
+        // Create series
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
+        var series = chart.series.push(
+          am5percent.PieSeries.new(root, {
+            valueField: "value",
+            categoryField: "category",
+            endAngle: 270
+          })
+        );
+        
+        series.states.create("hidden", {
+          endAngle: -90
+        });
+        
+        // Set data
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
+        series.data.setAll([{
+          category: "Lithuania",
+          value: 501.9
+        }, {
+          category: "Czechia",
+          value: 301.9
+        }, {
+          category: "Ireland",
+          value: 201.1
+        }, {
+          category: "Germany",
+          value: 165.8
+        }, {
+          category: "Australia",
+          value: 139.9
+        }, {
+          category: "Austria",
+          value: 128.3
+        }, {
+          category: "UK",
+          value: 99
+        }]);
+        
+        series.appear(1000, 100);
+        
+        }); // end am5.ready();
+
 });
 
-
-
-
-// TODO : Bloquer la modification d'un aliment (seulement la quantité)
-// TODO : Gestion du modifier qui bug arrrrrrrrgh
-// TODO : Gestion de la date null

@@ -1,3 +1,11 @@
+<section class="stats">
+    <h1>
+        Mes données
+    </h1>
+    <div id="chartdiv"></div>
+    <!-- INSERER DES GRAPHIQUES ICI -->
+</section>
+
 <section class="tableau">
     <h1>Historique</h1>
     <table class="table">
@@ -36,10 +44,11 @@
         </tr>
         <tr>
             <th></th>
-            <td><input type="submit" value="Créer un aliment"/></td>
+            <td><input type="submit" value="Créer un repas"/></td>
         </tr>
     </table>
     </form>
 </section>
+
 
 

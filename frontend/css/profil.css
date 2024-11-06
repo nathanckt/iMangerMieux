@@ -33,3 +33,10 @@ p{
     width: 80%;
     justify-content: space-around;
 }
+
+.cta{
+    width: 250px;
+    margin: 0 20px;
+    border: none;
+}
+

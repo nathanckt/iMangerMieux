@@ -24,8 +24,7 @@ $(document).ready(function(){
                 {
                     data: null, 
                     defaultContent: `
-                             <button class="cta cta--small btn-edit" >Modifier</button>
-                             <button class="cta cta--small btn-delete">Supprimer</button>
+                             <button class="cta cta--small btn-details" >Détails</button>
                          `,
                     target: -1
                 }
