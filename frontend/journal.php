@@ -1,6 +1,6 @@
 <section class="stats">
     <h1>
-        Mes données
+        Cette semaine
     </h1>
     <div id="chartdiv"></div>
     <!-- INSERER DES GRAPHIQUES ICI -->

@@ -27,6 +27,22 @@
         return $res;
     }
 
+    function getAlimentsFullById($db,$id){
+        $sql = "SELECT a.ID_ALIMENT, a.LIBELLE_ALIMENT, t.LIBELLE_TYPE, 
+                   GROUP_CONCAT(n.LIBELLE_APPORT) AS LIBELLES_APPORT, 
+                   GROUP_CONCAT(ap.POURCENTAGE_APPORT) AS POURCENTAGES     
+            FROM ALIMENT a
+            JOIN TYPE_D_ALIMENT t ON a.ID_TYPE = t.ID_TYPE
+            JOIN APPORTE ap ON a.ID_ALIMENT = ap.ID_ALIMENT
+            JOIN APPORT n ON ap.ID_APPORT = n.ID_APPORT
+            WHERE n.ID_ALIMENT = :id AND  ap.POURCENTAGE_APPORT IS NOT NULL AND ap.POURCENTAGE_APPORT != '' 
+            GROUP BY a.ID_ALIMENT, a.LIBELLE_ALIMENT, t.LIBELLE_TYPE
+            ORDER BY a.ID_ALIMENT";
+        $stmt = $db->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
     function getAliments($db){
         $sql = "SELECT a.ID_ALIMENT, a.LIBELLE_ALIMENT, t.LIBELLE_TYPE
                 FROM ALIMENT a
@@ -60,7 +76,13 @@
     switch($_SERVER['REQUEST_METHOD']){
         case 'GET':
             if(isset($_GET['populate']) && $_GET['populate']){
-                $result = getAlimentsFull($pdo);
+                if(isset($_GET['id'])){
+                    $id = $_GET['id'];
+                    $result = getAlimentsFullById($pdo,$id);
+                }
+                else{
+                    $result = getAlimentsFull($pdo);    
+                }
                 foreach ($result as &$aliment) {
                     $aliment->NUTRIMENTS = [];
                     $libelle_nutriment = explode(',', $aliment->LIBELLES_APPORT);

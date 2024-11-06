@@ -43,6 +43,39 @@ function get_repas_details($db, $id_repas) {
     return null;
 }
 
+function get_repas_details_by_login($db, $login) {
+    $sql = 'SELECT r.ID_REPAS, r.DATE, r.LOGIN, 
+                   a.ID_ALIMENT, a.LIBELLE_ALIMENT, c.QUANTITE
+            FROM REPAS r
+            JOIN CONTIENT c ON r.ID_REPAS = c.ID_REPAS
+            JOIN ALIMENT a ON c.ID_ALIMENT = a.ID_ALIMENT
+            WHERE r.LOGIN = :login';
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute(['login' => $login]);
+    $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+    if (!empty($result)) {
+        $repas_details = [
+            'ID_REPAS' => $result[0]->ID_REPAS,
+            'DATE' => $result[0]->DATE,
+            'LOGIN' => $result[0]->LOGIN,
+            'ALIMENTS' => []
+        ];
+
+        foreach ($result as $row) {
+            $repas_details['ALIMENTS'][] = [
+                'ID_ALIMENT' => $row->ID_ALIMENT,
+                'LIBELLE_ALIMENT' => $row->LIBELLE_ALIMENT,
+                'QUANTITE' => $row->QUANTITE
+            ];
+        }
+        return $repas_details;
+    }
+
+    return null;
+}
+
 function get_all_repas($db) {
     $sql = 'SELECT r.ID_REPAS, r.DATE, r.LOGIN, 
                    a.ID_ALIMENT, a.LIBELLE_ALIMENT, c.QUANTITE
@@ -139,6 +172,7 @@ switch($_SERVER['REQUEST_METHOD']){
     case 'GET': 
         setHeaders();
         
+        // FAUT MODIF ÇA 
         if (isset($_GET['id_repas'])) {
             // Récupérer les détails d'un seul repas
             $id_repas = $_GET['id_repas'];
@@ -155,6 +189,24 @@ switch($_SERVER['REQUEST_METHOD']){
             $result = get_all_repas($pdo);
             exit(json_encode($result));
         }
+
+        //Ça c'est good 
+        session_start();
+        if(isset($_SESSION['login'])){
+            $login = $_SESSION['login'];
+            $populateValue = $_GET['by_login'] ?? null; 
+            if ($populateValue !== null && $populateValue === "*") {        
+                $result = get_repas_details_by_login($pdo, $login);
+                if ($result) {
+                    http_response_code(200);
+                    exit(json_encode($result));
+                } else {
+                    http_response_code(404);
+                    exit(json_encode(['error' => 'Repas not found']));
+                }
+            }
+        }
+
 
     case 'POST':
         $data = json_decode(file_get_contents("php://input"));

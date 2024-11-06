@@ -9,3 +9,8 @@
 .stats{
     height: 100vh;
 }
+
+#chartdiv {
+    width: 100%;
+    height: 500px;
+}

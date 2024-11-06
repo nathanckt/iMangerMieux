@@ -331,6 +331,66 @@ $(document).ready(function(){
     });
 
 
+    //==================================
+    // RECUPERATION DES DONNEES SEMAINE
+    //==================================
+
+    let listeRepasSemaine;
+    let allAlimentIDs = [];
+    let listeAlimentsSemaine;
+    const currentDate = new Date();
+
+    const startDate = new Date();
+    startDate.setDate(currentDate.getDate() - 7);
+
+    $.ajax({
+        url: `${prefix_api}repas.php?by_login=*`,
+        method: "GET",
+        dataType: "json"
+    })
+    .done(function(response){
+        listeRepasSemaine = response.filter(repas => {
+            const repasDate = new Date(repas.DATE);
+            return repasDate >= startDate && repasDate <= currentDate;
+        });
+        if (Array.isArray(listeRepasSemaine)) {
+            listeRepasSemaine.forEach(function(repasItem) {
+                if (Array.isArray(repasItem.ALIMENTS)) {
+                    repasItem.ALIMENTS.forEach(function(aliment) {
+                        allAlimentIDs.push(aliment.ID_ALIMENT);
+                    });
+                }
+            });
+        } else {
+            console.log("Le tableau 'repas' n'est pas défini correctement.");
+        }
+
+        // RECUPERATION DES NUTRIMENTS
+        $.ajax({
+            url: `${prefix_api}aliments.php?populate=*`,  // Remplacez par l'URL de votre API
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+                listeAliments = data.filter(function(aliment) {
+                    return allAlimentIDs.includes(parseInt(aliment.ID_ALIMENT));  // Vérifie si l'ID de l'aliment est dans la liste alimentIds
+                });
+        
+                // Affiche les aliments filtrés
+                console.log("ici");
+                console.log(listeAliments);
+            },
+            error: function(xhr, status, error) {
+                console.error('Erreur lors de la requête :', error);
+            }
+        });
+        
+    })
+    .fail(function(error){
+        alert("La requete s'est terminée en erreur :" + JSON.stringify(error));
+    });
+    
+
 
     //===========================
     // AFFICHAGE DES GRAPHIQUES
