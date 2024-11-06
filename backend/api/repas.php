@@ -172,26 +172,7 @@ switch($_SERVER['REQUEST_METHOD']){
     case 'GET': 
         setHeaders();
         
-        // FAUT MODIF ÇA 
-        if (isset($_GET['id_repas'])) {
-            // Récupérer les détails d'un seul repas
-            $id_repas = $_GET['id_repas'];
-            $result = get_repas_details($pdo, $id_repas);
-            
-            if ($result) {
-                exit(json_encode($result));
-            } else {
-                http_response_code(404);
-                exit(json_encode(['error' => 'Repas not found']));
-            }
-        } else {
-            // Récupérer tous les repas
-            $result = get_all_repas($pdo);
-            exit(json_encode($result));
-        }
-
-        //Ça c'est good 
-        session_start();
+        //session_start();
         if(isset($_SESSION['login'])){
             $login = $_SESSION['login'];
             $populateValue = $_GET['by_login'] ?? null; 
@@ -206,6 +187,29 @@ switch($_SERVER['REQUEST_METHOD']){
                 }
             }
         }
+        else{
+
+            // FAUT MODIF ÇA 
+            if (isset($_GET['id_repas'])) {
+                // Récupérer les détails d'un seul repas
+                $id_repas = $_GET['id_repas'];
+                $result = get_repas_details($pdo, $id_repas);
+                
+                if ($result) {
+                    exit(json_encode($result));
+                } else {
+                    http_response_code(404);
+                    exit(json_encode(['error' => 'Repas not found']));
+                }
+            } else {
+                // Récupérer tous les repas
+                $result = get_all_repas($pdo);
+                exit(json_encode($result));
+            }
+        }
+        
+
+       
 
 
     case 'POST':
@@ -244,6 +248,7 @@ switch($_SERVER['REQUEST_METHOD']){
             http_response_code(500); 
             exit(json_encode(['error' => 'Failed to create user']));
         }
+
 
     case 'PUT':
         $data = json_decode(file_get_contents("php://input"));

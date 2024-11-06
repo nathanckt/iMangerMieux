@@ -102,6 +102,8 @@ $(document).ready(function(){
             .fail(function(error){
                 console.error("Erreur lors de la création de l'apport :", error);
             });
+
+            location.reload();
         }
     });
 
@@ -319,6 +321,7 @@ $(document).ready(function(){
             .fail(function(error) {
                 alert("Erreur lors de l'enregistrement du repas :" + JSON.stringify(error));
             });
+            location.reload();
         }
         editModif = false;
     });

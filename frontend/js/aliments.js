@@ -165,6 +165,8 @@ $(document).ready(function(){
         .fail(function(error){
             alert("La requete s'est terminée en erreur :" + JSON.stringify(error));
         });
+
+        location.reload();
     })
     
 });

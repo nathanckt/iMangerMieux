@@ -1,3 +1,6 @@
+<h1>
+    Nos Aliments
+</h1>
 <table class="table">
 <thead>
     <tr>
@@ -37,7 +40,7 @@
     </tr>
     <tr>
         <th></th>
-        <td><input type="submit" value="Créer un aliment"/></td>
+        <td><input type="submit" class="cta cta--input"value="Créer un aliment"/></td>
     </tr>
 </table>
 </form>
