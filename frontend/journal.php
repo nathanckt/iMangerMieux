@@ -47,7 +47,9 @@
         </tr>
         <tr>
             <th></th>
-            <td><input type="submit" value="Créer un repas"/></td>
+            <td></td>
+            <th></th>
+            <td><input type="submit" class="cta cta--input" value="Créer un repas"/></td>
         </tr>
     </table>
     </form>

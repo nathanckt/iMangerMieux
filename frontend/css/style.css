@@ -167,3 +167,16 @@ p{
 tbody{
     font-size: 1.7rem;
 }
+
+#lien-desact{
+    pointer-events: none;
+}
+
+
+.cta--input{
+    font-size: 1rem !important;
+    color : white;
+    width: 100%;
+    border: none;
+    margin-top: 20px;
+}

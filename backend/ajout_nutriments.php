@@ -25,7 +25,7 @@
                 ]);  
             }
             catch (PDOException $erreur) {
-                echo 'Erreur : '.$erreur->getMessage();
+                //echo 'Erreur : '.$erreur->getMessage();
             }  
             $pdo = null;              
         }
@@ -36,8 +36,8 @@
         while(($ligne = fgetcsv($fichier, 0, ";"))){
             $codeAliment = $ligne[6];
 
-            echo $codeAliment;
-            echo "<br>";
+            //echo $codeAliment;
+            //echo "<br>";
 
             for ($i = 9; $i < 76; $i++){
                 $code = 100 + $i;

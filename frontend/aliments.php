@@ -40,6 +40,8 @@
     </tr>
     <tr>
         <th></th>
+        <td></td>
+        <th></th>
         <td><input type="submit" class="cta cta--input"value="Créer un aliment"/></td>
     </tr>
 </table>

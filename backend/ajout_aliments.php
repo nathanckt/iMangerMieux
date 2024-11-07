@@ -34,7 +34,7 @@
                     ]);            
                 }
                 catch (PDOException $erreur) {
-                    echo 'Erreur : '.$erreur->getMessage();
+                    //echo 'Erreur : '.$erreur->getMessage();
                 }
                 
             //     echo "Le code est : $code et la designation est : $designation et le codeType est : $codeType";

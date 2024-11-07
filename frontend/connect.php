@@ -36,7 +36,7 @@
         </tr>
         <tr>
             <th></th>
-            <td><input type="submit" value="Se Connecter"/></td>
+            <td><input type="submit" class="cta cta--input" value="Se Connecter"/></td>
         </tr>
     </table>
 </form>

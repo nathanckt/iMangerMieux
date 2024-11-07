@@ -19,7 +19,14 @@
             else {
                 $class = ' ';
             }
-            echo "<li><a href='index.php?page={$pageId}' $class>$title</a></li>";
+
+            // if(isset($_SESSION['login']) && ($currentPageId === 'journal' || $currentPageId === 'aliments')){
+            //     $id = 'id="lien-desact"';
+            // }
+            // else{
+            //     $id = '';
+            // }
+            echo "<li><a href='index.php?page={$pageId}' $class >$title</a></li>";
         }
 
         // Fin de la navigation

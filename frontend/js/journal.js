@@ -223,7 +223,9 @@ $(document).ready(function(){
             const newRow = `
             <tr>
                 <th></th>
-                <td><input type="submit" value="Créer un aliment"/></td>
+                <td></td>
+                <th></th>
+                <td><input type="submit" class="cta cta--input" value="Créer un aliment"/></td>
             </tr>
         `;
 

@@ -65,7 +65,7 @@
                     ]);            
                 }
                 catch (PDOException $erreur) {
-                    echo 'Erreur : '.$erreur->getMessage();
+                    //echo 'Erreur : '.$erreur->getMessage();
                 }
             
                 $pdo = null;

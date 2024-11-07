@@ -5,7 +5,7 @@
     <p class="hero-text">Notre site web innovant a été conçu pour vous aider à savoir ce que vous mangez et l’impact de vos aliments sur votre corps.</p>
     <p class="hero-text">Vous souhaitez changer d’alimentation vers un mode de vie sain, alors rejoignez l’aventure !</p>
     <div class="hero-btn">
-        <a href="#" class="cta">Nos Aliments</a>
+        <a href="index.php?page=aliments" class="cta">Nos Aliments</a>
         <?php 
             if($login != null){
                 echo "<a href='profil.php' class='cta'>Mon Profil</a>";
