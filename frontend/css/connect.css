@@ -1,0 +1,25 @@
+section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+}
+
+.sandwich{
+    position: absolute;
+    top: 175px;
+    left: 1000px;
+    rotate: 15deg;
+    height:400px;
+    width:400px;
+}
+
+.fourchette{
+    position: absolute;
+    top: 175px;
+    left: 75px;
+    rotate: 15deg;
+    height:350px;
+    width:400px;
+}

@@ -23,24 +23,28 @@
         </div>
 </header>
 
-<h1>Se connecter</h1>
-<form id="login-form" action="#" method="POST">
-    <table>
-        <tr>
-            <th>Login :</th>
-            <td><input type="text" id="login" name="login" required></td>
-        </tr>
-        <tr>
-            <th>Mot de Passe :</th>
-            <td><input type="password" id="mdp" name="mdp" required></td>
-        </tr>
-        <tr>
-            <th></th>
-            <td><input type="submit" class="cta cta--input" value="Se Connecter"/></td>
-        </tr>
-    </table>
-</form>
+<section>
+    <h1>Se connecter</h1>
+    <form id="login-form" action="#" method="POST">
+        <table>
+            <tr>
+                <th>Login :</th>
+                <td><input type="text" id="login" name="login" required></td>
+            </tr>
+            <tr>
+                <th>Mot de Passe :</th>
+                <td><input type="password" id="mdp" name="mdp" required></td>
+            </tr>
+            <tr>
+                <th></th>
+                <td><input type="submit" class="cta cta--input" value="Se Connecter"/></td>
+            </tr>
+        </table>
+    </form>
+</section>
 
+<img src="imgs/sandwich.svg" alt="Dessin cartoon sandwich" class="sandwich">
+<img src="imgs/fourchette.svg" alt="Dessin cartoon fourchette" class="fourchette">
 <div id="message"></div>
 
 <script src="js/connect.js"></script>

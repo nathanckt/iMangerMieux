@@ -168,8 +168,8 @@ tbody{
     font-size: 1.7rem;
 }
 
-#lien-desact{
-    pointer-events: none;
+#hide{
+    display: none;
 }
 
 

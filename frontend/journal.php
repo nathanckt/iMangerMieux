@@ -1,4 +1,12 @@
-<section class="stats">
+<?php
+    if($login === null){
+        $id  = "hide";
+    }
+    else{
+        $id ="";
+    }
+?>
+<section class="stats" id=<?php echo $id?>>
     <h1>
         Cette semaine
     </h1>
@@ -9,7 +17,7 @@
     <!-- INSERER DES GRAPHIQUES ICI -->
 </section>
 
-<section class="tableau">
+<section class="tableau" id=<?php echo $id?>>
     <h1>Historique</h1>
     <table class="table">
     <thead>
@@ -24,7 +32,7 @@
     </tbody>
     </table>
 </section>
-<section class="ajout">
+<section class="ajout" id=<?php echo $id?>>
     <h1 class="form-titre">Ajouter un repas</h1>
     <form id="ajout-repas" action="#" method="POST">
     <table>
